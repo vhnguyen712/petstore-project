@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:petstore_application/blocs/product_bloc.dart';
 import 'package:petstore_application/data/models/product_model.dart';
-import 'package:petstore_application/data/repositories/product_repository.dart';
+import 'components/product_card.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -46,31 +48,19 @@ class _HomeScreenState extends State<HomeScreen> {
         stream: productBloc.productStream,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return GridView.builder(
-              gridDelegate:
-                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+            return ListView.builder(
+              padding: EdgeInsets.all(15),
               itemCount: snapshot.data?.length ?? 0,
               itemBuilder: (context, index) {
                 var product = snapshot.data?[index];
-                return Container(
-                  padding: EdgeInsets.all(20),
-                  height: 100,
-                  margin: const EdgeInsets.all(8),
-                  child: Column(
-                    children: <Widget>[
-                      Text("name: " + (product?.name ?? "null")),
-                      Text("quantity: " +
-                          (product?.quantity.toString() ?? "null")),
-                      Text("price: " +
-                          (product?.price?.toStringAsFixed(2) ?? "null")),
-                    ],
-                  ),
-                );
+                return ProductCard(product: product);
               },
             );
           }
           return Center(
-            child: Text("No product found."),
+            child: CircularProgressIndicator(
+              color: Colors.black54,
+            ),
           );
         },
       ),
