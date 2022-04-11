@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:petstore_application/blocs/product_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:petstore_application/blocs/product/product_bloc.dart';
 import 'package:petstore_application/data/models/product_model.dart';
+import 'package:petstore_application/data/repositories/product_repository.dart';
+import 'package:petstore_application/data/services/product_service.dart';
 import 'components/product_card.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,19 +16,18 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final productBloc = ProductBloc();
+  final productBloc = ProductBloc(
+      productRepository: ProductRepository(service: ProductService()));
 
   @override
   void initState() {
     // TODO: implement initState
-    productBloc.eventSink.add(ProductEvent.fetch);
     super.initState();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    productBloc.dispose();
     super.dispose();
   }
 
@@ -44,24 +46,28 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      body: StreamBuilder<List<ProductModel>>(
-        stream: productBloc.productStream,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
+      body: BlocBuilder<ProductBloc, ProductState>(
+        builder: (context, state) {
+          if (state is ProductLoading) {
+            return Center(
+              child: CircularProgressIndicator(
+                color: Colors.black54,
+              ),
+            );
+          }
+          if (state is ProductsLoaded) {
             return ListView.builder(
               padding: EdgeInsets.all(15),
-              itemCount: snapshot.data?.length ?? 0,
+              itemCount: state.products.length,
               itemBuilder: (context, index) {
-                var product = snapshot.data?[index];
+                var product = state.products[index];
                 return ProductCard(product: product);
               },
             );
-          }
-          return Center(
-            child: CircularProgressIndicator(
-              color: Colors.black54,
-            ),
-          );
+          } else
+            return Center(
+              child: Text("Something went wrong"),
+            );
         },
       ),
     );

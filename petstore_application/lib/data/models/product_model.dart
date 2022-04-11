@@ -1,11 +1,11 @@
-class ProductModel {
+class Product {
   int? _id;
   String? _name;
   int? _quantity;
   double? _price;
   String? _image;
 
-  ProductModel(
+  Product(
       {int? id, String? name, int? quantity, double? price, String? image}) {
     if (id != null) {
       this._id = id;
@@ -35,7 +35,7 @@ class ProductModel {
   String? get image => _image;
   set image(String? image) => _image = image;
 
-  ProductModel.fromJson(Map<String, dynamic> json) {
+  Product.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
     _name = json['name'];
     _quantity = json['quantity'];

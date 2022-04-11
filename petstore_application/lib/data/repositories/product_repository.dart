@@ -6,10 +6,10 @@ class ProductRepository {
   final ProductService service;
 
   ProductRepository({required this.service});
-  Future<List<ProductModel>?> fetchAllProducts() async {
+  Future<List<Product>?> fetchAllProducts() async {
     try {
       final productRaw = await service.fetchAllProducts();
-      return productRaw!.map((e) => ProductModel.fromJson(e)).toList();
+      return productRaw!.map((e) => Product.fromJson(e)).toList();
     } on DioError catch (e) {
       print(e);
       return null;
