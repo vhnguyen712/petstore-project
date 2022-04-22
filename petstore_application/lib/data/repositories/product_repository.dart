@@ -9,6 +9,7 @@ class ProductRepository {
   Future<List<Product>?> fetchAllProducts() async {
     try {
       final productRaw = await service.fetchAllProducts();
+      print(productRaw);
       return productRaw!.map((e) => Product.fromJson(e)).toList();
     } on DioError catch (e) {
       print(e);

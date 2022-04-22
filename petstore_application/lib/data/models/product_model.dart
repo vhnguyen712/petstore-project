@@ -1,4 +1,6 @@
-class Product {
+import 'package:equatable/equatable.dart';
+
+class Product extends Equatable {
   int? _id;
   String? _name;
   int? _quantity;
@@ -52,4 +54,9 @@ class Product {
     data['image'] = this._image;
     return data;
   }
+
+  @override
+  // TODO: implement props
+  List<Object?> get props =>
+      [this._id, this._image, this._name, this._price, this._quantity];
 }

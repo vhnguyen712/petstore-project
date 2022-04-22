@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:petstore_application/blocs/cart/cart_bloc.dart';
 import 'package:petstore_application/blocs/product/product_bloc.dart';
 import 'package:petstore_application/data/repositories/product_repository.dart';
 import 'package:petstore_application/data/services/product_service.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
               LoadProducts(),
             ),
         ),
+        BlocProvider(create: (context) => CartBloc()..add(InitCart()))
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -40,7 +42,7 @@ class MyApp extends StatelessWidget {
           // or simply save your changes to "hot reload" in a Flutter IDE).
           // Notice that the counter didn't reset back to zero; the application
           // is not restarted.
-          primarySwatch: Colors.blueGrey,
+          primarySwatch: Colors.orange,
         ),
         home: const HomeScreen(),
       ),

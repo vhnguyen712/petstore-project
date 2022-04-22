@@ -6,6 +6,7 @@ import 'package:petstore_application/blocs/product/product_bloc.dart';
 import 'package:petstore_application/data/models/product_model.dart';
 import 'package:petstore_application/data/repositories/product_repository.dart';
 import 'package:petstore_application/data/services/product_service.dart';
+import 'package:petstore_application/screens/cartscreen/cart_screen.dart';
 import 'components/product_card.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,8 +17,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final productBloc = ProductBloc(
-      productRepository: ProductRepository(service: ProductService()));
+  // final productBloc = ProductBloc(
+  //     productRepository: ProductRepository(service: ProductService()));
 
   @override
   void initState() {
@@ -45,6 +46,15 @@ class _HomeScreenState extends State<HomeScreen> {
             fontWeight: FontWeight.bold,
           ),
         ),
+        actions: [
+          IconButton(
+              onPressed: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => CartScreen())),
+              icon: Icon(
+                Icons.shopping_cart_rounded,
+                color: Colors.black,
+              ))
+        ],
       ),
       body: BlocBuilder<ProductBloc, ProductState>(
         builder: (context, state) {
@@ -57,6 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
           }
           if (state is ProductsLoaded) {
             return ListView.builder(
+              physics: BouncingScrollPhysics(),
               padding: EdgeInsets.all(15),
               itemCount: state.products.length,
               itemBuilder: (context, index) {

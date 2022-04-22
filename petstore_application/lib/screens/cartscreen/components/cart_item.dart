@@ -3,13 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:petstore_application/blocs/cart/cart_bloc.dart';
 import 'package:petstore_application/data/models/product_model.dart';
 
-class ProductCard extends StatelessWidget {
-  const ProductCard({
+class CartItem extends StatelessWidget {
+  const CartItem({
     Key? key,
     required this.product,
+    required this.quantity,
   }) : super(key: key);
 
-  final Product? product;
+  final Product product;
+  final int quantity;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,7 @@ class ProductCard extends StatelessWidget {
               width: 80,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage(product?.image ?? ""),
+                  image: NetworkImage(product.image ?? ""),
                   fit: BoxFit.fitHeight,
                 ),
               ),
@@ -49,32 +51,55 @@ class ProductCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  product?.name ?? "null",
+                  product.name ?? "null",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                   ),
                 ),
-                Text((product?.price?.toStringAsFixed(2) ?? "null") + "\$"),
+                RichText(
+                  text: TextSpan(
+                    text: "Total: ",
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontSize: 16,
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: ((product.price! * quantity).toStringAsFixed(2)) +
+                            "\$",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          BlocProvider.of<CartBloc>(context)
+                              .add(RemoveFromCart(product));
+                        },
                         icon: Icon(
                           Icons.remove,
                           size: 20,
                         )),
                     Text(
-                      "1",
+                      quantity.toString(),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                       ),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        BlocProvider.of<CartBloc>(context)
+                            .add(AddToCart(product));
+                      },
                       icon: Icon(
                         Icons.add,
                         size: 20,
@@ -95,13 +120,13 @@ class ProductCard extends StatelessWidget {
                 width: 40,
                 height: 40,
                 child: Icon(
-                  Icons.add_shopping_cart_rounded,
+                  Icons.remove_shopping_cart,
                   color: Colors.white,
                 ),
               ),
               onTap: () {
-                BlocProvider.of<CartBloc>(context).add(AddToCart(product!));
-                print(BlocProvider.of<CartBloc>(context).state);
+                BlocProvider.of<CartBloc>(context)
+                    .add(RemoveItemFromCart(product));
               },
             ),
           ],

@@ -17,7 +17,10 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     on<LoadProducts>(_onLoadProducts);
   }
 
-  void _onLoadProducts(LoadProducts event, Emitter<ProductState> emit) async {
+  void _onLoadProducts(
+    LoadProducts event,
+    Emitter<ProductState> emit,
+  ) async {
     var products = await _productRepository.fetchAllProducts();
     emit(ProductsLoaded(products: products!));
   }
